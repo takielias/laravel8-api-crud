@@ -19,13 +19,7 @@ class AuthController extends Controller
             'password' => 'required'
         ];
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return MRB::asError(422)
-                ->withData(['error' => $validator->messages()->first()])
-                ->build();
-        }
+        $request->validate($rules);
 
         $user = User::where('email', $request->email)->first();
 
@@ -43,13 +37,7 @@ class AuthController extends Controller
             'password' => ['required', 'min:6', 'confirmed']
         ];
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return MRB::asError(422)
-                ->withData(['error' => $validator->messages()->first()])
-                ->build();
-        }
+        $request->validate($rules);
 
         $user = User::create([
             'name' => $request->name,
@@ -58,7 +46,10 @@ class AuthController extends Controller
         ]);
 
         return MRB::asSuccess()
-            ->withData(['token' => $user->createToken($request->email)->plainTextToken])
+            ->withData([
+                'user' => [],
+                'AUTH_TOKEN' => $user->createToken($request->email)->plainTextToken
+            ])
             ->withHttpCode(200)
             ->build();
     }

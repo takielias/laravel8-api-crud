@@ -3,7 +3,6 @@
 /public/storage
 /public/documents
 /public/img
-/app/Http/Kernel.php
 /storage/*.key
 /vendor
 /extra
