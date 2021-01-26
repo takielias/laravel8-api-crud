@@ -20,7 +20,15 @@ Route::prefix('v1')->group(function () {
     Route::post('/signin', [\App\Http\Controllers\Api\AuthController::class, 'signIn']);
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+//        Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+//        Route::get('products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
+//        Route::get('products/{product}', 'ArticleController@show');
+//        Route::post('products', 'ArticleController@store');
+//        Route::put('products/{product}', 'ArticleController@update');
+//        Route::delete('products/{product}', 'ArticleController@delete');
+        Route::apiResource('products', \App\Http\Controllers\Api\ProductController::class);
+        Route::post('products/{product}/ratings', 'RatingController@store');
+
     });
 
 });
