@@ -7,6 +7,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\MyResponseBuilder as MRB;
+use Intervention\Image\ImageManagerStatic;
 
 class ProductController extends Controller
 {
@@ -17,7 +18,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductResource::collection(Product::paginate(25));
+        return response()->json(ProductResource::collection(Product::paginate(25)));
+
+//        return MRB::asSuccess()
+//            ->withData(ProductResource::collection(Product::paginate(25)))
+//            ->withHttpCode(200)
+//            ->build();
     }
 
     /**
@@ -33,9 +39,15 @@ class ProductController extends Controller
             'description' => ['required', 'string'],
             'price' => ['required', 'regex:/^\d*(\.\d{1,3})?$/', 'gt:0'],
         ];
-
-        if ($request->hasFile('image')) {
-            $rules['image'] = 'image|mimes:jpeg,png|max:1024';
+        if ($request->has('image')) {
+            $rules['image'] = ["required", function ($attribute, $value, $fail) use ($request) {
+                try {
+                    ImageManagerStatic::make($value);
+                    return true;
+                } catch (\Exception $e) {
+                    return $fail("Invalid Image");
+                }
+            }];
         }
 
         $msg['image.max'] = 'Failed to upload an image. The image maximum size is 1MB.';
@@ -50,9 +62,9 @@ class ProductController extends Controller
             'price' => $request->price,
         ]);
 
-        if ($request->hasFile('image')) {
+        if ($request->has('image')) {
             $path = 'images';
-            $image_path = imageUpload($request->file('image'), $path);
+            $image_path = axiosFileUpload($request, $path);
             $product->image = $image_path;
             $product->save();
         }
