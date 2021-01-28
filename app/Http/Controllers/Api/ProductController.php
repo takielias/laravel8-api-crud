@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\MyResponseBuilder as MRB;
 use Intervention\Image\ImageManagerStatic;
 
 class ProductController extends Controller
@@ -20,10 +19,6 @@ class ProductController extends Controller
     {
         return response()->json(ProductResource::collection(Product::paginate(25)));
 
-//        return MRB::asSuccess()
-//            ->withData(ProductResource::collection(Product::paginate(25)))
-//            ->withHttpCode(200)
-//            ->build();
     }
 
     /**
@@ -69,13 +64,8 @@ class ProductController extends Controller
             $product->save();
         }
 
-        return MRB::asSuccess()
-            ->withData([
-                'product' => $product,
-                'msg' => 'Product Has been added successfully !!!'
-            ])
-            ->withHttpCode(201)
-            ->build();
+        return response()->json(['success' => true, 'msg' => 'Product has been addedd successfully.']);
+
     }
 
     /**
@@ -86,7 +76,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return response()->json(new ProductResource($product));
     }
 
     /**
@@ -109,6 +100,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Product::destroy([$id]);
+        return response()->json(['success' => true, 'msg' => 'Product has been removed successfully.']);
     }
 }
