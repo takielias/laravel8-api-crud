@@ -8,6 +8,9 @@ function axiosFileUpload(Request $request, $uploadPath)
 {
     $imageName = '';
     if ($request->get('image')) {
+        if (!File::exists($uploadPath)) {
+            File::makeDirectory($uploadPath, $mode = 0755, true, true);
+        }
         $image = $request->get('image');
         $imageName = md5(time() . rand()) . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
         Image::make($request->get('image'))->save(public_path($uploadPath . '/') . $imageName);
