@@ -15,11 +15,15 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => [
+        'api/*',
+        '/login',
+        '/logout',
+        'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['POST', 'GET', 'DELETE', 'PUT', '*'],
+    'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8080', 'http://vue3.ebuz.xyz'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
