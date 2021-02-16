@@ -48,11 +48,7 @@ class ProductController extends Controller
             }];
         }
 
-        $msg['image.max'] = 'Failed to upload an image. The image maximum size is 1MB.';
-        $msg['image.image'] = 'The type of the uploaded file should be an image.';
-        $msg['image.uploaded'] = 'Please Check Max File upload Size in php.ini';
-
-        $request->validate($rules, $msg);
+        $request->validate($rules);
 
         $product = Product::create([
             'title' => $request->title,
@@ -112,11 +108,7 @@ class ProductController extends Controller
             }];
         }
 
-        $msg['image.max'] = 'Failed to upload an image. The image maximum size is 1MB.';
-        $msg['image.image'] = 'The type of the uploaded file should be an image.';
-        $msg['image.uploaded'] = 'Please Check Max File upload Size in php.ini';
-
-        $request->validate($rules, $msg);
+        $request->validate($rules);
 
         $product = Product::findOrFail($id);
 
